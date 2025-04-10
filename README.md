@@ -11,7 +11,7 @@ compiled version of Opencv version 4.10
 Libtorch 2.6 for windows, with cuda 12.6  
 https://download.pytorch.org/libtorch/cu126/libtorch-win-shared-with-deps-2.6.0%2Bcu126.zip
 
-Save all DLL files in the same directory as DeepCnn2025.exe  
+Copy all DLL files (from Lib subdirectory of libtorch) in the same directory as DeepCnn2025.exe  
 
 Install visual c++ 2022 redistribuable  
 https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
