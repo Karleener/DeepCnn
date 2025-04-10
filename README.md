@@ -10,8 +10,16 @@ https://download.pytorch.org/libtorch/cu126/libtorch-win-shared-with-deps-2.6.0%
 
 Save all DLL files in the same directory as DeepCnn2025.exe  
 
+![run DeppCnn2025](images/first.png)
+
 Run configuration to create a network structure and save it (.configCNN file)  
+
+![configuration](images/confcnn.png)
+
+
 Train the network selecting configCNN file and data directory structure including train and test subdirectories as follows  
+(see sampledata.zip provided)  
+
  directory\train\classe1\image1.jpg  
  directory\train\classe1\image2.jpg  
  ...  
@@ -23,5 +31,13 @@ Train the network selecting configCNN file and data directory structure includin
  directory\test\classe2\image1.jpg  
  directory\test\classe2\image1.jpg  
 
+ ![train](images/train.png)
+
+Wait for training completion (press F5 to stop the process)
+
+ ![Training](images/courbes.png)
+
 Save training result as .pt file
 Test image classification selecting one of the test image.
+ ![test](images/train.png)
+
