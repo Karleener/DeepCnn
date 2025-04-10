@@ -13,6 +13,10 @@ https://download.pytorch.org/libtorch/cu126/libtorch-win-shared-with-deps-2.6.0%
 
 Save all DLL files in the same directory as DeepCnn2025.exe  
 
+Install visual c++ 2022 redistribuable  
+https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
+
+# Run DeepCnn2025.exe 
 ![run DeppCnn2025](images/first.png)
 
 # Run configuration to create a network structure and save it (.configCNN file)  
