@@ -13,9 +13,6 @@ https://download.pytorch.org/libtorch/cu126/libtorch-win-shared-with-deps-2.6.0%
 
 Copy all DLL files (from Lib subdirectory of libtorch) in the same directory as DeepCnn2025.exe  
 
-# Install CUDA 12.6
-https://developer.nvidia.com/cuda-12-6-0-download-archive?target_os=Windows&target_arch=x86_64
-
 # Install visual c++ 2022 redistribuable  
 https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
 
