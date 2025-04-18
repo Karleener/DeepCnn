@@ -1,1 +1,6 @@
-source
+# Libtorch is required to compile the project  
+https://pytorch.org/
+
+Download the Windows version , with and without debug information, with CUDA 12.6
+
+
