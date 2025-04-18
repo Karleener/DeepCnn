@@ -458,10 +458,7 @@ void CDialTest::onMouse(int event, int x, int y, int flags, void* userdata)
 			std::string patch_filename = class_folder + "/" + std::to_string(cv::getTickCount()) + ".png";
 			cv::imwrite(patch_filename, patch);
 
-			// Afficher le patch enregistré
-			cv::imshow("Patch", patch);
-			cv::waitKey(1000);
-			cv::destroyWindow("Patch");
+
 		}
 	}
 	else if (event == cv::EVENT_RBUTTONDOWN) {
