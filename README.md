@@ -47,5 +47,14 @@ Train the network selecting configCNN file and data directory structure includin
 # Save training result as .pt file
 
 # Test image classification selecting one of the test image.
- ![test](images/train.png)
+ ![test](images/class_test.png)
+ It is possible to classify one single image or to create/label patches from images in order to create a train/test directory structure
+Choose the blob size Clic on Select image and record patches - select saving folder.  
+Open the training image containing objects to be localized.  
+Left clic on several patches of the background (class 0) Right clic to increment the class number, then left clic on the patches of the current class
+Repeat the process for several classes. Close the training image.  
+Clic on "Create train/test directories" and select the folder where you stored the patches.  
+Close the Classification test dialog box and train your CNN.  
+Open Classification test, choose the blob size and the image to be segmented.   
+Segmented image (_segmented.png) and list of detected patches (csv file) are automatically saved.
 
