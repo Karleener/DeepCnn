@@ -1,5 +1,6 @@
-# DeepCnn
-C++ Libtorch  based Interface for creation of convolutional neural network, train and test image classification, without python
+# DeepCnn 2025
+C++ Libtorch  based Interface for creation of convolutional neural network, train and test image classification, without code    
+Generation of equivalent python code automatically done using Mistral AI (need codestral API key to be stored in mistral_api_key.txt)
 
 # Third party dll are available here  
 Download compiled version of Opencv version 4.10  (file opencv_world4100.dll)  
@@ -10,6 +11,8 @@ run opencv installation, and copy opencv_world4100.dll in the directory of DeepC
 https://download.pytorch.org/libtorch/cu126/libtorch-win-shared-with-deps-2.6.0%2Bcu126.zip
 
 Copy all DLL files (from Lib subdirectory of libtorch) in the same directory as DeepCnn2025.exe  
+
+#Other dependencies : curl json (nlohmann)  : installation is easy using vcpkg
 
 # Install visual c++ 2022 redistribuable  
 https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
