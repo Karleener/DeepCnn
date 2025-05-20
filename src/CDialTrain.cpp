@@ -5,6 +5,7 @@
 #include "DeepCnn2025.h"
 #include "afxdialogex.h"
 #include "CDialTrain.h"
+#include "CMistral.h"
 
 #include "CNetcv.h"
 #include "CNNDialog.h"
@@ -51,7 +52,9 @@ void CDialTrain::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CDialTrain, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_LANCER, &CDialTrain::OnBnClickedButtonLancer)
 	ON_BN_CLICKED(IDC_BUTTON_LANCER_FROM_MODEL, &CDialTrain::OnBnClickedButtonLancerFromModel)
+	ON_BN_CLICKED(IDC_BUTTON_GENEREPYTHON, &CDialTrain::OnBnClickedButtonGenerepython)
 END_MESSAGE_MAP()
+
 
 
 // gestionnaires de messages de CDialTrain
@@ -64,7 +67,6 @@ void CDialTrain::OnBnClickedButtonLancer()
 	//int input_width = 28;
 	m_Texte_Train = L"Apprentissage en cours... \nF2 pour arrêter";
 	UpdateData(false);
-
 
 
 	// Désactiver les boutons
@@ -154,12 +156,7 @@ void CDialTrain::OnBnClickedButtonLancer()
 
 		return;
 	}
-	//MyNet.trainModel(image_tensor, label_tensor,NbClasses,10);
-	//std::vector<ConvLayerParams> params = {
-	//{3, 32, 3, 1, 1, true, 2},
-	//{32, 64, 3, 1, 1, true, 2}
-	//};
-	  // Construire le chemin complet pour le fichier de modèle et les noms de classes
+
 	std::filesystem::path modelFilePath = configDir / std::string(CT2A(m_NomModel));
 	std::filesystem::path namesFilePath = configDir / (modelFilePath.stem().string() + ".names");
 
@@ -195,6 +192,8 @@ void CDialTrain::OnBnClickedButtonLancer()
 			return;
 		}
 	}
+
+
 	m_pMyNet->trainModelDyn(m_Iter, m_LearningRate, m_Batch, m_Periode, modelFilePath.string());
 	m_pMyNet->saveModel(m_pMyNet->m_model, modelFilePath.string(), namesFilePath.string());
 	m_BtOk.EnableWindow(true);
@@ -217,4 +216,117 @@ void CDialTrain::OnBnClickedButtonLancerFromModel()
 	m_FromScratch = false;
 	OnBnClickedButtonLancer();
 	m_FromScratch = true;
+}
+
+void CDialTrain::OnBnClickedButtonGenerepython()
+{
+	// TODO: ajoutez ici le code de votre gestionnaire de commande
+	UpdateData(TRUE);
+	m_Texte_Train = L"Python generation\n using Mistral AI";
+	UpdateData(false);
+
+	// Désactiver les boutons
+	m_BtLancer.EnableWindow(FALSE);
+	m_BtOk.EnableWindow(FALSE);
+
+	CFileDialog fileDialog(TRUE, _T("configCNN"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Config Files (*.configCNN)|*.configCNN||"));
+	fileDialog.m_ofn.lpstrTitle = _T("Charger la configuration");
+
+	if (fileDialog.DoModal() != IDOK)
+	{
+		m_BtLancer.EnableWindow(true);
+		m_BtOk.EnableWindow(true);
+
+		m_Texte_Train = L"Opération annulée";
+		UpdateData(false);
+		return;
+	}
+	CString configFilePath = fileDialog.GetPathName();
+	std::string stdconfigFilePath = CT2A(configFilePath.GetString());
+	std::filesystem::path configPath(configFilePath.GetString());
+	std::filesystem::path configDir = configPath.parent_path();
+
+	// Charger la configuration à partir du fichier
+	std::vector<ConvLayerParams> layers;
+	std::vector<DenseLayerParams> Denselayers;
+	if (!m_pMyNet->loadConfig(stdconfigFilePath, layers, Denselayers))
+	{
+		AfxMessageBox(_T("Erreur lors du chargement de la configuration."));
+		m_BtLancer.EnableWindow(true);
+		m_BtOk.EnableWindow(true);
+		m_Texte_Train = L"Opération annulée";
+		UpdateData(false);
+		return;
+	}
+	if (layers.size() == 0)
+	{
+		AfxMessageBox(_T("Erreur: aucune couche de convolution trouvée dans le fichier de configuration."));
+		m_BtLancer.EnableWindow(true);
+		m_BtOk.EnableWindow(true);
+		m_Texte_Train = L"Opération annulée";
+		UpdateData(false);
+		return;
+	}
+	// Afficher la boîte de dialogue CCNNDialog sous forme de boîte non modale
+	CCNNDialog* pDialog = new CCNNDialog(m_pMyNet->m_input_height, m_pMyNet->m_input_width);
+	pDialog->Create(IDD_CNN_DIALOG, this);
+	pDialog->ShowWindow(SW_SHOW);
+
+	// Reconstruire la liste à partir du fichier de configuration
+	pDialog->SetLayers(layers, Denselayers);
+	pDialog->m_Visu.SetLayers(layers, Denselayers);
+	pDialog->UpdateTotalParams();
+
+	//désactiver les boutons de la boîte de dialogue pDialog
+	pDialog->m_BtConv.EnableWindow(FALSE);
+	pDialog->m_BtDense.EnableWindow(FALSE);
+	pDialog->m_BtSave.EnableWindow(FALSE);
+
+	MessageBoxA(NULL, "Selectionnez le dossier qui contient les sous-dossiers train et test", "Selectionner le dossier", MB_OK);
+
+	CFolderPickerDialog folderPickerDialog(NULL, OFN_FILEMUSTEXIST, this, 0);
+	if (folderPickerDialog.DoModal() != IDOK) {
+		m_BtLancer.EnableWindow(true);
+		m_BtOk.EnableWindow(true);
+		m_Texte_Train = L"Opération annulée";
+		UpdateData(false);
+		return;
+	}
+
+	CString folderPath = folderPickerDialog.GetPathName();
+	std::filesystem::path rootPath(folderPath.GetString());
+
+	int NbClasses;
+
+	bool read = m_pMyNet->loadDataset(rootPath.string()); // fixe le nombre de classes et les tensors
+	if (!read)
+	{
+		AfxMessageBox(_T("Directory structure should be	\ntrain\n  classe1\n   image1.jpg\n   image2.jpg\n  classe2\n   image1.jpg\n...\n\ntest\n  classe1\n   image1.jpg\n   image2.jpg\netc."));
+		m_BtLancer.EnableWindow(true);
+		m_BtOk.EnableWindow(true);
+		m_Texte_Train = L"Bad Directory structure";
+		UpdateData(false);
+		pDialog->DestroyWindow();
+
+		return;
+	}
+
+	std::filesystem::path modelFilePath = configDir / std::string(CT2A(m_NomModel));
+	std::filesystem::path namesFilePath = configDir / (modelFilePath.stem().string() + ".names");
+
+	if (m_Batch > m_pMyNet->m_train_image_paths.size()) m_Batch = m_pMyNet->m_train_image_paths.size();
+	m_pMyNet->m_model = m_pMyNet->createModel(layers, Denselayers, m_pMyNet->m_input_height, m_pMyNet->m_input_width, m_pMyNet->m_nb_classes);
+
+	CMistral Mistral;
+	size_t lastDot = stdconfigFilePath.find_last_of('.');
+	std::string filePathWithoutExt = stdconfigFilePath.substr(0, lastDot);
+	string prompt2 = Mistral.generateTrainingPrompt(layers, Denselayers, m_pMyNet->m_input_height, m_pMyNet->m_input_width, m_pMyNet->m_nb_classes, rootPath.string(), m_Batch, m_Iter, m_LearningRate, true, modelFilePath.string());
+	Mistral.sendRequestToMistralAPI(prompt2, filePathWithoutExt + "_training.py");
+	// afficher le message de succès
+	m_Texte_Train.Format(L"Python file generated\n");
+	UpdateData(false);
+	m_BtOk.EnableWindow(true);
+	m_BtLancer.EnableWindow(true);
+	pDialog->DestroyWindow();
+
 }
