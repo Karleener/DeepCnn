@@ -27,6 +27,7 @@
 #define IDC_EDIT1                       1008
 #define IDC_EDIT_BLOB                   1008
 #define IDC_BUTTON_CHOIXIMAGE_SEG       1008
+#define IDC_BUTTON_GENEREPYTHON         1008
 #define IDC_STATIC_TEXTE_TRAIN          1009
 #define IDC_BUTTON_CHOIXIMAGE_SEG2      1009
 #define IDC_BUTTON_CHOIXIMAGE_GT        1009
@@ -41,9 +42,13 @@
 #define IDC_BUTTON_VISU                 1013
 #define IDC_RADIO3                      1014
 #define IDC_CHECK1                      1015
+#define IDC_CHECK_L2                    1016
+#define IDC_CHECK_L3                    1017
+#define IDC_CHECK_ADAPTLR               1017
 #define IDC_BUTTON_SAVE_CONFIG          1041
 #define IDC_BUTTON_OK                   1042
 #define IDC_STATIC_TOTAL_PARAMS         1043
+#define IDC_BUTTON_PYTHON               1044
 #define IDD_CNN_DIALOG                  1101
 #define IDC_EDIT_IN_CHANNELS            11001
 #define IDC_EDIT_OUT_CHANNELS           11002
@@ -61,7 +66,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1016
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

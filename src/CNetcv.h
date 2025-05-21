@@ -244,107 +244,6 @@ struct CNNModelDyn : torch::nn::Module {
 };
 
 
-//struct CNNModelDyn : torch::nn::Module {
-//    CNNModelDyn(const std::vector<ConvLayerParams>& conv_params, int input_height, int input_width, int num_classes) 
-//    {
-//        // Stocker le nombre de couches
-//        num_layers = conv_params.size();
-//
-//        // Dimension actuelle de l'image
-//        int current_height = input_height;
-//        int current_width = input_width;
-//
-//        // Créer les couches de convolution dynamiquement
-//        for (size_t i = 0; i < num_layers; ++i) {
-//            const auto& params = conv_params[i];
-//
-//            // Créer la couche convolutive
-//            auto conv = torch::nn::Conv2d(
-//                torch::nn::Conv2dOptions(params.in_channels, params.out_channels, params.kernel_size)
-//                .stride(params.stride)
-//                .padding(params.padding)
-//            );
-//
-//            // Enregistrer la couche
-//            conv_layers.push_back(conv);
-//            register_module("conv" + std::to_string(i + 1), conv);
-//
-//            // Mettre à jour les dimensions
-//            // Formule: (W - K + 2P) / S + 1
-//            current_height = (current_height - params.kernel_size + 2 * params.padding) / params.stride + 1;
-//            current_width = (current_width - params.kernel_size + 2 * params.padding) / params.stride + 1;
-//
-//            // Si pooling utilisé, ajuster les dimensions
-//            if (params.use_pool) {
-//                current_height /= params.pool_size;
-//                current_width /= params.pool_size;
-//            }
-//
-//            // Stocker les paramètres de pooling
-//            use_pool.push_back(params.use_pool);
-//            pool_sizes.push_back(params.pool_size);
-//        }
-//
-//        // Calculer la taille d'entrée pour la couche fully connected
-//        int flattened_size = conv_params.back().out_channels * current_height * current_width;
-//
-//        //// Créer la couche fully connected
-//        //fc = torch::nn::Linear(flattened_size, num_classes);
-//        //register_module("fc", fc);
-//
-//        // Créer la couche fully connected avec activation sigmoïde
-//        fc1 = torch::nn::Linear(flattened_size, num_classes*5); // Taille intermédiaire de 128, ajustez selon vos besoins
-//        fc2 = torch::nn::Linear(num_classes*5, num_classes);
-//        register_module("fc1", fc1);
-//        register_module("fc2", fc2);
-//
-//        // Stocker les dimensions finales pour la méthode forward
-//        final_channels = conv_params.back().out_channels;
-//        final_height = current_height;
-//        final_width = current_width;
-//    }
-//
-//    torch::Tensor forward(torch::Tensor x) 
-//    {
-//        // Passer à travers toutes les couches convolutives
-//        for (size_t i = 0; i < num_layers; ++i) {
-//            x = torch::relu(conv_layers[i]->forward(x));
-//
-//            // Appliquer pooling si nécessaire
-//            if (use_pool[i]) {
-//                x = torch::max_pool2d(x, pool_sizes[i]);
-//            }
-//        }
-//
-//        // Aplatir le tenseur
-//        x = x.view({ -1, final_channels * final_height * final_width });
-//
-//        //// Couche fully connected
-//        //x = fc->forward(x);
-//
-//        // Couche fully connected avec activation sigmoïde
-//        x = torch::sigmoid(fc1->forward(x));
-//        x = fc2->forward(x);
-//
-//        return torch::log_softmax(x, 1);
-//    }
-//
-//    // Membres
-//    std::vector<torch::nn::Conv2d> conv_layers;
-//    std::vector<bool> use_pool;
-//    std::vector<int> pool_sizes;
-//    torch::nn::Linear fc{ nullptr };
-//    torch::nn::Linear fc1{ nullptr };
-//    torch::nn::Linear fc2{ nullptr };
-//
-//
-//
-//    // Pour conserver les dimensions
-//    size_t num_layers;
-//    int final_channels;
-//    int final_height;
-//    int final_width;
-//};
 
 class CNetcv
 {
@@ -373,6 +272,8 @@ public:
     int m_input_width;
 	double m_Accuracy;
 	double m_Loss;
+    BOOL m_L2reg;
+    BOOL m_AutomLR;
 	
 	//int loadDataset(const string& datasetPath, vector<Mat>& images, vector<int>& labels);
 	//void loadDataset(const string& datasetPath,  std::vector<cv::Mat>& images,  std::vector<int>& labels);
@@ -389,7 +290,7 @@ public:
     bool saveModel( std::shared_ptr<CNNModelDyn> model,  const std::string& filePath,  const std::string& namesFilePath);
     std::shared_ptr<CNNModelDyn> loadModel(const std::string& filePath);
     std::map<std::string, float>  testImageInference(std::shared_ptr<CNNModelDyn>& model, Mat& resized_image);
-    bool saveConfig(const std::vector<ConvLayerParams>& layers, const std::vector<DenseLayerParams>& denseLayers, const string& filePath);
+    bool saveConfig(const std::vector<ConvLayerParams>& layers, const std::vector<DenseLayerParams>& denseLayers, const string& filePath,bool python);
     bool loadConfig(const string& filePath, std::vector<ConvLayerParams>& layers, std::vector<DenseLayerParams>& denseLayers);
 
 };

@@ -24,6 +24,8 @@ CDialTrain::CDialTrain(CWnd* pParent, CNetcv* pMyNet)
 	, m_Texte_Train(_T(""))
 	, m_Periode(50)
 	, m_FromScratch(true)
+	, m_L2reg(true)
+	, m_AutomLR(true)
 {
 
 }
@@ -46,6 +48,8 @@ void CDialTrain::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_STATIC_TEXTE_TRAIN, m_Texte_Train);
 	DDX_Text(pDX, IDC_EDIT_SAUVEN, m_Periode);
 	DDV_MinMaxInt(pDX, m_Periode, 1, 10000);
+	DDX_Check(pDX, IDC_CHECK_L2, m_L2reg);
+	DDX_Check(pDX, IDC_CHECK_ADAPTLR, m_AutomLR);
 }
 
 
@@ -63,6 +67,8 @@ void CDialTrain::OnBnClickedButtonLancer()
 {
 	// TODO: ajoutez ici le code de votre gestionnaire de commande
 	UpdateData(TRUE);
+	m_pMyNet->m_AutomLR = m_AutomLR;
+	m_pMyNet->m_L2reg = m_L2reg;
 	//int input_height = 28;
 	//int input_width = 28;
 	m_Texte_Train = L"Apprentissage en cours... \nF2 pour arrêter";

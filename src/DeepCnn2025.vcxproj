@@ -76,8 +76,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath);c:\opencv4100_cpu\build\include\opencv2;c:\opencv4100_cpu\build\include;c:\libtorchdebugcuda126\include;c:\libtorchdebugcuda126\include\torch\csrc\api\include</IncludePath>
-    <LibraryPath>$(LibraryPath);c:\opencv4100_cpu\build\x64\vc16\lib;c:\libtorchdebugcuda126\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\lib\x64</LibraryPath>
+    <IncludePath>$(IncludePath);f:\opencv\build\include\opencv2;f:\opencv\build\include;f:\libtorch270cuda128\include;f:\libtorch270cuda128\include\torch\csrc\api\include;C:\Users\Johel\source\repos\vcpkg\installed\x64-windows\include</IncludePath>
+    <LibraryPath>$(LibraryPath);f:\opencv\build\x64\vc16\lib;f:\libtorch270cuda128\lib;C:\Users\Johel\source\repos\vcpkg\installed\x64-windows\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -87,8 +87,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(IncludePath);c:\opencv4100_cpu\build\include\opencv2;c:\opencv4100_cpu\build\include;c:\libtorchcuda126\include;c:\libtorchcuda126\include\torch\csrc\api\include</IncludePath>
-    <LibraryPath>$(LibraryPath);c:\opencv4100_cpu\build\x64\vc16\lib;c:\libtorchcuda126\lib</LibraryPath>
+    <IncludePath>$(IncludePath);f:\opencv\build\include\opencv2;f:\opencv\build\include;f:\libtorch270cuda128\include;f:\libtorch270cuda128\include\torch\csrc\api\include;C:\Users\Johel\source\repos\vcpkg\installed\x64-windows\include</IncludePath>
+    <LibraryPath>$(LibraryPath);f:\opencv\build\x64\vc16\lib;f:\libtorch270cuda128\lib;C:\Users\Johel\source\repos\vcpkg\installed\x64-windows\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -103,7 +103,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>opencv_world4100d.lib;torch.lib;torch_cpu.lib;c10.lib;dnnl.lib;cpuinfo.lib;asmjit.lib;fbgemm.lib;fmtd.lib;kineto.lib;libprotobufd.lib;pthreadpool.lib;sleef.lib;XNNPACK.lib;c10_cuda.lib;caffe2_nvrtc.lib;libprotocd.lib;microkernels-prod.lib;torch_cuda.lib</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world4100d.lib;torch.lib;torch_cpu.lib;c10.lib;dnnl.lib;cpuinfo.lib;asmjit.lib;fbgemm.lib;fmt.lib;kineto.lib;libprotobufd.lib;pthreadpool.lib;sleef.lib;XNNPACK.lib;c10_cuda.lib;caffe2_nvrtc.lib;libprotocd.lib;microkernels-prod.lib;torch_cuda.lib;libcurl.lib</AdditionalDependencies>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
     </Link>
@@ -173,7 +173,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -183,7 +183,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opencv_world4100.lib;torch.lib;torch_cpu.lib;c10.lib;dnnl.lib;cpuinfo.lib;asmjit.lib;fbgemm.lib;fmt.lib;kineto.lib;libprotobuf.lib;pthreadpool.lib;sleef.lib;XNNPACK.lib;c10_cuda.lib;caffe2_nvrtc.lib;libprotoc.lib;microkernels-prod.lib;torch_cuda.lib</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world4100.lib;torch.lib;torch_cpu.lib;c10.lib;dnnl.lib;cpuinfo.lib;asmjit.lib;fbgemm.lib;fmt.lib;kineto.lib;libprotobuf.lib;pthreadpool.lib;sleef.lib;XNNPACK.lib;c10_cuda.lib;caffe2_nvrtc.lib;libprotoc.lib;microkernels-prod.lib;torch_cuda.lib;libcurl.lib</AdditionalDependencies>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
     </Link>
@@ -201,6 +201,7 @@
   <ItemGroup>
     <ClInclude Include="CDialTest.h" />
     <ClInclude Include="CDialTrain.h" />
+    <ClInclude Include="CMistral.h" />
     <ClInclude Include="CNetcv.h" />
     <ClInclude Include="cnndialog.h" />
     <ClInclude Include="Courbe.h" />
@@ -215,6 +216,7 @@
   <ItemGroup>
     <ClCompile Include="CDialTest.cpp" />
     <ClCompile Include="CDialTrain.cpp" />
+    <ClCompile Include="CMistral.cpp" />
     <ClCompile Include="CNetcv.cpp" />
     <ClCompile Include="cnndialog.cpp" />
     <ClCompile Include="Courbe.cpp" />

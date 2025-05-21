@@ -50,4 +50,5 @@ public:
     CButton m_BtSave;
     CButton m_BtDense;
     CButton m_BtConv;
+    afx_msg void OnBnClickedButtonPython();
 };

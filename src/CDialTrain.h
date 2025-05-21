@@ -38,4 +38,7 @@ public:
 	int m_Periode;
 	bool m_FromScratch;
 	afx_msg void OnBnClickedButtonLancerFromModel();
+	afx_msg void OnBnClickedButtonGenerepython();
+	BOOL m_L2reg;
+	BOOL m_AutomLR;
 };

@@ -74,14 +74,7 @@ void CDialTest::OnBnClickedButtonChoiximage()
 {
 	m_Texte = "";
 	UpdateData(false);
-	//if (filePath=="") {
-	//	AfxMessageBox(_T("Veuillez d'abord sélectionner un modèle!"), MB_ICONERROR);
-	//	OnBnClickedButtonChoixmodel();
-	//}
-	//if (m_MyNet.m_model) {
-	//	m_MyNet.m_model.reset();
-	//}
-	//m_MyNet.loadModel(filePath);
+
 	if (!m_pMyNet->m_model) OnBnClickedButtonChoixmodel();
 	// Afficher la boîte de dialogue pour sélectionner une image
 	CFileDialog dlgFile(TRUE, NULL, NULL, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
@@ -147,88 +140,7 @@ void CDialTest::OnBnClickedButtonChoiximage()
 	cv::waitKey(0);
 }
 
-//void CDialTest::OnBnClickedButtonChoiximageSeg()
-//{
-//	// Vérifier si un modèle est chargé, sinon demander à l'utilisateur d'en charger un
-//	if (!m_pMyNet->m_model) {
-//		OnBnClickedButtonChoixmodel();
-//		if (!m_pMyNet->m_model) {
-//			AfxMessageBox(_T("Aucun modèle chargé. Opération annulée."), MB_ICONERROR);
-//			return;
-//		}
-//	}
-//
-//	// Afficher la boîte de dialogue pour sélectionner une image
-//	CFileDialog dlgFile(TRUE, NULL, NULL, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
-//		_T("Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|All Files (*.*)|*.*||"), NULL);
-//
-//	if (dlgFile.DoModal() != IDOK) {
-//		return; // L'utilisateur a annulé
-//	}
-//
-//	// Récupérer le chemin de l'image sélectionnée
-//	CString filePath = dlgFile.GetPathName();
-//	std::string imagePath = CT2A(filePath);
-//
-//	// Charger l'image avec OpenCV
-//	cv::Mat image = cv::imread(imagePath);
-//	if (image.empty()) {
-//		AfxMessageBox(_T("Erreur lors du chargement de l'image!"), MB_ICONERROR);
-//		return;
-//	}
-//
-//	// Paramètres de segmentation
-//	int window_size = 32; // Taille initiale des sous-fenêtres (32x32)
-//	int stride = 8;      // Stride initial (16 pixels)
-//	int num_classes = m_pMyNet->m_nb_classes;
-//
-//	// Créer une image de sortie pour la segmentation
-//	cv::Mat segmented_image(image.rows, image.cols, CV_8UC3, cv::Scalar(0, 0, 0));
-//
-//	// Parcourir l'image avec des sous-fenêtres glissantes
-//	for (int y = 0; y <= image.rows - window_size; y += stride) {
-//		for (int x = 0; x <= image.cols - window_size; x += stride) {
-//			// Extraire la sous-fenêtre
-//			cv::Rect window(x, y, window_size, window_size);
-//			cv::Mat sub_window = image(window);
-//
-//			// Redimensionner la sous-fenêtre à la taille d'entrée du modèle
-//			//cv::Mat resized_window;
-//			//cv::resize(sub_window, resized_window, cv::Size(m_pMyNet->m_input_width, m_pMyNet->m_input_height));
-//
-//			// Classer la sous-fenêtre
-//			std::map<std::string, float> results = m_pMyNet->testImageInference(m_pMyNet->m_model, sub_window);
-//			// Trouver l'indice de la classe avec la probabilité maximale
-//			int class_index = -1;
-//			float max_prob = 0.0f;
-//			for (size_t i = 0; i < m_pMyNet->class_names.size(); ++i) {
-//				const std::string& class_name = m_pMyNet->class_names[i];
-//				if (results[class_name] > max_prob) {
-//					max_prob = results[class_name];
-//					class_index = static_cast<int>(i);
-//				}
-//			}
-//
-//			// Générer une couleur unique pour chaque classe
-//			cv::Vec3b color;
-//			color[0] = (class_index * 50) % 256; // Bleu
-//			color[1] = (class_index * 100) % 256; // Vert
-//			color[2] = (class_index * 150) % 256; // Rouge
-//
-//			// Colorer les pixels de la sous-fenêtre dans l'image segmentée
-//			for (int i = y; i < y + window_size && i < segmented_image.rows; ++i) {
-//				for (int j = x; j < x + window_size && j < segmented_image.cols; ++j) {
-//					segmented_image.at<cv::Vec3b>(i, j) = color;
-//				}
-//			}
-//		}
-//	}
-//	// sauvegarder l'image segmentée
-//	cv::imwrite("segmented_image.png", segmented_image);
-//	// Afficher l'image segmentée
-//	cv::imshow("Segmented Image", segmented_image);
-//	cv::waitKey(0);
-//}
+
 
 void CDialTest::OnBnClickedButtonChoiximageSeg()
 {
@@ -382,15 +294,6 @@ void CDialTest::OnBnClickedButtonChoiximageSeg()
 	cv::imshow("Segmented Image", segmented_image);
 
 
-	// Filtrer les fenêtres de la classe 1
-	//std::vector<std::tuple<int, float, cv::Rect>> class1_windows;
-	//for (const auto& [class_index, prob, rect] : final_predictions) {
-	//	//if (class_index !=0) { // Classe 1
-	//		class1_windows.emplace_back(class_index, prob, rect);
-	//	//}
-	//}
-	// enregistrer la liste des fenetres dans un fichier "fenetres.txt"
-	// le nom du fichier est le nom de l'image d'origine + "_fenetres.txt"
 	std::string windows_file_path = imagePath.substr(0, imagePath.find_last_of('.')) + "_subwindows.csv";
 	std::ofstream file(windows_file_path);
 	if (file.is_open()) {
@@ -405,8 +308,6 @@ void CDialTest::OnBnClickedButtonChoiximageSeg()
 		AfxMessageBox(_T("Erreur lors de la sauvegarde des coordonnées des fenêtres!"), MB_ICONERROR);
 	}
 	m_image_path = imagePath;
-	// Appeler la fonction pour incruster les caractères décodés
-	//OverlayDecodedBraille(image, class1_windows);
 	cv::waitKey(0);
 
 }
@@ -493,20 +394,7 @@ void CDialTest::OnBnClickedButtonChoiximageGt()
 		return;
 	}
 
-	// Étape 2 : Choisir un dossier pour enregistrer les données
-	//BROWSEINFO bi = { 0 };
-	//bi.lpszTitle = _T("Choisissez un dossier pour enregistrer les patches");
-	//LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
-	//if (pidl != 0) {
-	//	TCHAR path[MAX_PATH];
-	//	if (SHGetPathFromIDList(pidl, path)) {
-	//		m_outputDirectory = CT2A(path);
-	//	}
-	//	CoTaskMemFree(pidl);
-	//}
-	//else {
-	//	return; // L'utilisateur a annulé
-	//}
+
 	MessageBoxA(NULL, "Selectionnez le dossier qui contiendra les sous-dossiers des classes", "Selectionner le dossier", MB_OK);
 	CFolderPickerDialog folderPickerDialog(NULL, OFN_FILEMUSTEXIST, this, 0);
 	if (folderPickerDialog.DoModal() != IDOK) {
@@ -527,39 +415,13 @@ void CDialTest::OnBnClickedButtonChoiximageGt()
 
 	//std::cout << "Utilisez le clic gauche pour enregistrer des patches et le clic droit pour changer de classe." << std::endl;
 	cv::imshow("Image", m_currentImage);
-	//// Afficher l'image jusqu'à ce que l'utilisateur ferme la fenêtre
-	//while (true) {
-	//	
-	//	if (cv::waitKey(10) == 27) { // Appuyer sur Échap pour quitter
-	//		break;
-	//	}
-	//}
 
-	//// Fermer la fenêtre
-	//cv::destroyWindow("Image");
 }
 
 
 void CDialTest::OnBnClickedButtonCreateTrainTest()
 {
-	// Ouvrir une boîte de dialogue pour sélectionner le dossier source
-	//BROWSEINFO bi = { 0 };
-	//bi.lpszTitle = _T("Choisissez le dossier contenant les sous-dossiers des classes");
-	//LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
-	//if (!pidl) {
-	//	AfxMessageBox(_T("Aucun dossier sélectionné."), MB_ICONERROR);
-	//	return;
-	//}
 
-	//TCHAR path[MAX_PATH];
-	//if (!SHGetPathFromIDList(pidl, path)) {
-	//	CoTaskMemFree(pidl);
-	//	AfxMessageBox(_T("Erreur lors de la sélection du dossier."), MB_ICONERROR);
-	//	return;
-	//}
-	//CoTaskMemFree(pidl);
-
-	//std::string sourceDir = CT2A(path);
 
 	MessageBoxA(NULL, "Selectionnez le dossier contenant les sous-dossiers des classes", "Selectionner le dossier", MB_OK);
 	CFolderPickerDialog folderPickerDialog(NULL, OFN_FILEMUSTEXIST, this, 0);
@@ -632,95 +494,6 @@ void CDialTest::OnBnClickedButtonCreateTrainTest()
 }
 
 
-//void CDialTest::OnBnClickedButtonCreateTrainTest()
-//{
-//	//// TODO: ajoutez ici le code de votre gestionnaire de notification de contrôle
-//	//// lire le fichier "fenetres.txt" et appeler le décodage braille
-//	//std::ifstream file("fenetres.csv");
-//	//if (!file.is_open()) {
-//	//	AfxMessageBox(_T("Erreur lors de l'ouverture du fichier fenetres.csv!"), MB_ICONERROR);
-//	//	return;
-//	//}
-//
-//	//std::vector<BraillePoint> win;
-//	//std::string line;
-//	//bool is_header = true;
-//
-//	//int taille_v = 32;
-//	//int taille_h = 32;
-//
-//	//// Lire le fichier ligne par ligne
-//	//while (std::getline(file, line)) {
-//	//	if (is_header) {
-//	//		// Ignorer la première ligne (en-tête)
-//	//		is_header = false;
-//	//		continue;
-//	//	}
-//
-//	//	std::istringstream iss(line);
-//	//	std::string token;
-//	//	int class_index;
-//	//	float prob;
-//	//	cv::Rect rect;
-//
-//	//	// Lire les valeurs séparées par des virgules
-//	//	if (std::getline(iss, token, ',')) class_index = std::stoi(token);
-//	//	if (std::getline(iss, token, ',')) prob = std::stof(token);
-//	//	if (std::getline(iss, token, ',')) rect.x = std::stoi(token);
-//	//	if (std::getline(iss, token, ',')) rect.y = std::stoi(token);
-//	//	if (std::getline(iss, token, ',')) rect.width = std::stoi(token);
-//	//	if (std::getline(iss, token, ',')) rect.height = std::stoi(token);
-//
-//	//	// Ajouter le point Braille correspondant
-//	//	win.push_back({ (float)(rect.x + rect.width / 2), (float)(rect.y + rect.height / 2) });
-//	//}
-//
-//	//file.close();
-//
-//
-//
-//
-//	//// Charger l'image avec OpenCV
-//	//cv::Mat image = cv::imread(m_image_path);
-//	//if (image.empty()) {
-//	//	// Afficher la boîte de dialogue pour sélectionner une image
-//	//	CFileDialog dlgFile(TRUE, NULL, NULL, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
-//	//		_T("Image Files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|All Files (*.*)|*.*||"), NULL);
-//
-//	//	if (dlgFile.DoModal() != IDOK) {
-//	//		return; // L'utilisateur a annulé
-//	//	}
-//
-//	//	// Récupérer le chemin de l'image sélectionnée
-//	//	CString filePath = dlgFile.GetPathName();
-//	//	std::string imagePath = CT2A(filePath);
-//	//	// Charger l'image avec OpenCV
-//	//	image = cv::imread(imagePath);
-//	//	m_image_path = imagePath;
-//	//}
-//	////// Créer une instance du décodeur
-//	////BrailleRecognizer recognizer(m_pMyNet->m_input_width, m_pMyNet->m_input_height);
-//
-//	////std::string recognizedText = recognizer.recognizeText(win);
-//
-//	//CBrailleMusicDecoder decoder(win, 2* taille_h,3* taille_v);
-//	////std::string recognizedText = decoder.decode(false);
-//	////recognizer.overlayCharactersOnImage(image, cv::Scalar(0, 255, 0));
-//	//// Afficher le texte reconnu
-//	//decoder.overlayDecodedCharacters(image, cv::Scalar(0, 0, 0),1,2);
-//	//// Afficher l'image avec les caractères incrustés
-//	//cv::imshow("Image avec Braille", image);
-//
-//	//// Sauvegarder l'image modifiée
-//	//cv::imwrite("image_with_braille.png", image);
-//
-//	//// Attendre une touche pour fermer la fenêtre
-//	//cv::waitKey(0);
-//
-//
-//	// créer un dossier pour les images de test
-//
-//}
 
 BOOL CDialTest::OnInitDialog()
 {

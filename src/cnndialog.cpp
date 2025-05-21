@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CCNNDialog, CDialogEx)
     ON_BN_CLICKED(IDC_BUTTON_SAVE_CONFIG, &CCNNDialog::OnBnClickedButtonSaveConfig)
     ON_BN_CLICKED(IDC_BUTTON_OK, &CCNNDialog::OnBnClickedButtonOk)
     ON_BN_CLICKED(IDC_BUTTON_ADD_MLP_LAYER, &CCNNDialog::OnBnClickedButtonAddMlpLayer)
+    ON_BN_CLICKED(IDC_BUTTON_PYTHON, &CCNNDialog::OnBnClickedButtonPython)
 END_MESSAGE_MAP()
 
 void CCNNDialog::OnBnClickedAddLayer()
@@ -92,20 +93,6 @@ void CCNNDialog::OnBnClickedAddLayer()
 
 }
 
-//void CCNNDialog::UpdateLayerList()
-//{
-//    //CListBox* pListBox = (CListBox*)GetDlgItem(IDC_LIST_STRUCTURE);
-//    //pListBox->ResetContent();
-//
-//    //for (const auto& layer : m_layers)
-//    //{
-//    //    CString strLayer;
-//    //    strLayer.Format(_T("In: %d, Out: %d, Kernel: %d, Stride: %d, Padding: %d, Pool: %d"),
-//    //        layer.in_channels, layer.out_channels, layer.kernel_size, layer.stride, layer.padding, layer.pool_size);
-//    //    pListBox->AddString(strLayer);
-//    //}
-//}
-
 
 void CCNNDialog::OnBnClickedButtonSaveConfig()
 {
@@ -122,7 +109,7 @@ void CCNNDialog::OnBnClickedButtonSaveConfig()
     {
         CString filePath = fileDialog.GetPathName();
         std::string stdFilePath = CT2A(filePath.GetString());
-        if (m_netcv.saveConfig(m_layers, m_denseLayers, stdFilePath ))
+        if (m_netcv.saveConfig(m_layers, m_denseLayers, stdFilePath,false ))
         {
             AfxMessageBox(_T("Configuration sauvegardee."));
             m_isModified = false;
@@ -274,4 +261,30 @@ void CCNNDialog::UpdateDenseLayerList()
 		strLayer.Format(_T("Neurons: %d, Activation: %d"), layer.nb_neurons, layer.activation_type);
 		pListBox->AddString(strLayer);
 	}
+}
+void CCNNDialog::OnBnClickedButtonPython()
+{
+    CFileDialog fileDialog(FALSE, _T("configCNN"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, _T("Config Files (*.configCNN)|*.configCNN||"));
+    fileDialog.m_ofn.lpstrTitle = _T("Enregistrer la configuration");
+    m_netcv.m_input_height = m_inputHeight;
+    m_netcv.m_input_width = m_inputWidth;
+    if (m_layers.size() == 0)
+    {
+        AfxMessageBox(_T("Erreur : aucune couche de convolution trouvée."));
+        return;
+    }
+    if (fileDialog.DoModal() == IDOK)
+    {
+        CString filePath = fileDialog.GetPathName();
+        std::string stdFilePath = CT2A(filePath.GetString());
+        if (m_netcv.saveConfig(m_layers, m_denseLayers, stdFilePath, true))
+        {
+            AfxMessageBox(_T("Configuration sauvegardee."));
+            m_isModified = false;
+        }
+        else
+        {
+            AfxMessageBox(_T("Erreur lors de la sauvegarde de la configuration."));
+        }
+    }
 }
