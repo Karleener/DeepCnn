@@ -1,0 +1,41 @@
+Generate Python code using PyTorch for a CNN with the following configuration:
+Input dimensions: 128x128
+Number of classes: 10
+Convolutional Layers:
+  - Channels: 3 to 32
+    Kernel size: 3
+    Stride: 1
+    Padding: 1
+    Pooling: MaxPool with size 2
+  - Channels: 32 to 64
+    Kernel size: 3
+    Stride: 1
+    Padding: 1
+    Pooling: MaxPool with size 2
+  - Channels: 64 to 128
+    Kernel size: 3
+    Stride: 1
+    Padding: 1
+    Pooling: MaxPool with size 2
+  - Channels: 128 to 256
+    Kernel size: 3
+    Stride: 1
+    Padding: 1
+    Pooling: MaxPool with size 2
+  - Channels: 256 to 512
+    Kernel size: 3
+    Stride: 1
+    Padding: 1
+    Pooling: MaxPool with size 2
+  - Channels: 512 to 512
+    Kernel size: 3
+    Stride: 1
+    Padding: 1
+Dense Layers:
+  - Neurons: 100
+    Activation: Relu 
+  - Neurons: 10
+    Activation: Sigmoid 
+Output Layer:
+  - Neurons: 10
+    Activation: Softmax

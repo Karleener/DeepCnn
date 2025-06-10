@@ -1,0 +1,45 @@
+Generate very precise Python code using PyTorch to train a CNN with the following steps:
+Calculate the tensor dimensions after each convolutional and pooling layer to ensure they match the expected size for the fully connected layer.
+syntaxe of comment has to be python compatible
+add import torch.nn.functional as F
+2. Create  the model with the following configuration:
+   - Input dimensions: 28x28
+   - Number of classes: 10
+   - Convolutional Layers:
+     - Channels: 3 to 32
+       Kernel size: 3
+       Stride: 1
+       Padding: 1
+       Pooling: MaxPool with size 2
+     - Channels: 32 to 64
+       Kernel size: 3
+       Stride: 1
+       Padding: 1
+       Pooling: MaxPool with size 2
+     - Channels: 64 to 128
+       Kernel size: 3
+       Stride: 1
+       Padding: 1
+       Pooling: MaxPool with size 2
+     - Channels: 128 to 256
+       Kernel size: 3
+       Stride: 1
+       Padding: 1
+       Pooling: MaxPool with size 2
+     - Channels: 256 to 256
+       Kernel size: 3
+       Stride: 1
+       Padding: 1
+       Pooling: MaxPool with size 1
+     - Channels: 256 to 10
+       Kernel size: 1
+       Stride: 1
+       Padding: 0
+Calculate dynamically the tensor dimensions for the dense layers from the conv layers and pooling and add following dense layers, creating a convs function un CNN class, based on random input
+   - Dense Layers:
+     - Neurons: 20
+    Activation: Relu 
+Calculate the tensor dimensions for the output layer
+Output Layer:
+  - Neurons: 10
+    Activation: Softmax
